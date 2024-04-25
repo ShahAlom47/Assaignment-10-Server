@@ -36,6 +36,7 @@ async function run() {
 
 
         const userCollections = client.db("a10UserDB").collection('newUser');
+        const spotCollections = client.db("spotsDB").collection('newSpot');
 
         //  add user 
         app.post('/user', async (req, res) => {
@@ -70,6 +71,26 @@ async function run() {
               res.send(result)
             })
             
+
+
+// ------------------------- Spot related Api-----------
+
+ //  add user 
+ app.post('/spot', async (req, res) => {
+    const newSpot = req.body;
+    const result = await spotCollections.insertOne(newSpot);
+    res.send(result)
+});
+
+app.get('/spot', async(req, res) => {
+    const cursor = spotCollections.find();
+    const result =  await cursor.toArray()
+    res.send(result)
+})
+
+
+
+
 
 
 
