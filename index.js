@@ -46,11 +46,32 @@ async function run() {
 
 
         // get multiple data
-        app.get('/users', async(req, res) => {
+        app.get('/user', async(req, res) => {
             const cursor = userCollections.find();
             const result =  await cursor.toArray()
             res.send(result)
         })
+
+        // update login user datat
+        app.patch('/user',async(req,res)=>{
+            const email=  req.body.email
+            const name=  req.body.name
+           
+            
+              const filter = { email: email };
+              const updateDoc = {
+                $set: {
+                    name:name,
+                  email:email,
+                  
+                },
+              };
+              const result = await userCollection.updateOne(filter, updateDoc);
+              res.send(result)
+            })
+            
+
+
 
         // // get single data 
         // app.get('/user/:id', async(req, res) => {
