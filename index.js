@@ -89,6 +89,37 @@ app.get('/spot', async(req, res) => {
 })
 
 
+// data sort low to high 
+app.get('/spotUp', async(req, res) => {
+    const options = {
+        sort: { average_cost: 1 },
+        // projection: { _id: 0 },
+      };
+
+
+    const cursor = spotCollections.find({},options);
+    const result =  await cursor.toArray()
+    res.send(result)
+})
+
+// data sort high to low 
+app.get('/spotLow', async(req, res) => {
+    const options = {
+        sort: { average_cost: -1 },
+      };
+    const cursor = spotCollections.find({},options);
+    const result =  await cursor.toArray()
+    res.send(result)
+})
+
+// get single data 
+        app.get('/spot/:id', async(req, res) => {
+            const id= req.params.id
+             const query = { _id: new ObjectId(id) };
+             const result = await spotCollections.findOne(query);
+            res.send(result)
+        })
+
 
 
 
