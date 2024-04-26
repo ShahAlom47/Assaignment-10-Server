@@ -134,6 +134,15 @@ app.post('/spot/myData', async(req, res) => {
         console.log(email);
     })
 
+
+     // delete data
+
+        app.delete('/spot/:id', async(req, res) => {
+           const id= req.params.id
+            const query = { _id: new ObjectId(id) };
+            const result = await spotCollections.deleteOne(query);
+            res.send(result)
+        })
  
 
 
