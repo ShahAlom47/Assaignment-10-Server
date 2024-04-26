@@ -90,27 +90,27 @@ app.get('/spot', async(req, res) => {
 
 
 // data sort low to high 
-app.get('/spotUp', async(req, res) => {
-    const options = {
-        sort: { average_cost: 1 },
-        // projection: { _id: 0 },
-      };
-
-
-    const cursor = spotCollections.find({},options);
-    const result =  await cursor.toArray()
-    res.send(result)
-})
-
-// data sort high to low 
 app.get('/spotLow', async(req, res) => {
     const options = {
         sort: { average_cost: -1 },
-      };
+    };
     const cursor = spotCollections.find({},options);
-    const result =  await cursor.toArray()
-    res.send(result)
-})
+    
+    const result =  await cursor.toArray();
+    res.send(result);
+});
+
+
+
+// data sort high to low 
+app.get('/spotUp', async(req, res) => {
+    const options = {
+        sort: { average_cost: 1 },
+    };
+    const cursor = spotCollections.find({},options);
+    const result =  await cursor.toArray();
+    res.send(result);
+});
 
 // get single data 
         app.get('/spot/:id', async(req, res) => {
@@ -144,6 +144,32 @@ app.post('/spot/myData', async(req, res) => {
             res.send(result)
         })
  
+
+        // update spot 
+
+         app.patch('/spot/:id', async(req, res) => {
+            const data = req.body
+            const id= req.params.id
+            const filter  = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    user_name: data.user_name,
+                    user_email: data.user_email,
+                    spot_name: data.spot_name,
+                    country_name: data.country_name,
+                    imageURL: data.imageURL,
+                    location: data.location,
+                    average_cost: data.average_cost,
+                    seasonality: data.seasonality,
+                    travel_time: data.travel_time,
+                    totalVisitors: data.totalVisitors,
+                    description: data.description,
+                  
+                },
+              };
+              const result = await spotCollections.updateOne(filter, updateDoc);
+             res.send(result)
+         })
 
 
 
