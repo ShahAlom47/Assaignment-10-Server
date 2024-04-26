@@ -122,13 +122,19 @@ app.get('/spotLow', async(req, res) => {
 
 // get single data using emsil
 
-app.get('/spot/myData', async(req, res) => {
+app.post('/spot/myData', async(req, res) => {
         const email= req.body
-         const query = { email: email };
-         const result = await userCollections.findOne(query);
-        res.send(result)
+         const query = {user_email:email.email};
+         
+         const cursor = spotCollections.find(query);
+         const result =  await cursor.toArray()
+        //  res.send(result)
+
+         res.json(result);
+        console.log(email);
     })
 
+ 
 
 
 
