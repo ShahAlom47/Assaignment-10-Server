@@ -176,12 +176,22 @@ app.post('/spot/myData', async(req, res) => {
 
 
          // ------------------------- Countries  related Api-----------
+
+        //  add data
          app.post('/country', async (req, res) => {
-            const newUser = req.body;
-            const result = await countryCollections.insertOne(newCountry);
+            const newCounry = req.body;
+            const result = await countryCollections.insertOne(newCounry);
             res.send(result)
         });
 
+
+// get multiple data 
+
+app.get('/country', async(req, res) => {
+    const cursor = countryCollections.find();
+    const result =  await cursor.toArray()
+    res.send(result)
+})
 
 
 
