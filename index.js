@@ -37,6 +37,7 @@ async function run() {
 
         const userCollections = client.db("a10UserDB").collection('newUser');
         const spotCollections = client.db("spotsDB").collection('newSpot');
+        const countryCollections = client.db("countryDB").collection('newCountry');
 
         //  add user 
         app.post('/user', async (req, res) => {
@@ -150,6 +151,7 @@ app.post('/spot/myData', async(req, res) => {
          app.patch('/spot/:id', async(req, res) => {
             const data = req.body
             const id= req.params.id
+            console.log(data);
             const filter  = { _id: new ObjectId(id) };
             const updateDoc = {
                 $set: {
@@ -170,6 +172,16 @@ app.post('/spot/myData', async(req, res) => {
               const result = await spotCollections.updateOne(filter, updateDoc);
              res.send(result)
          })
+
+
+
+         // ------------------------- Countries  related Api-----------
+         app.post('/country', async (req, res) => {
+            const newUser = req.body;
+            const result = await countryCollections.insertOne(newCountry);
+            res.send(result)
+        });
+
 
 
 
