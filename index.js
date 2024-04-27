@@ -68,7 +68,7 @@ async function run() {
                   
                 },
               };
-              const result = await userCollection.updateOne(filter, updateDoc);
+              const result = await userCollections.updateOne(filter, updateDoc);
               res.send(result)
             })
             
@@ -190,6 +190,17 @@ app.post('/spot/myData', async(req, res) => {
 app.get('/country', async(req, res) => {
     const cursor = countryCollections.find();
     const result =  await cursor.toArray()
+    res.send(result)
+})
+
+// get single data 
+app.get('/country/:country', async(req, res) => {
+    const country= req.params.country
+    
+    
+     const query = { country_name: country };
+     const cursor = spotCollections.find(query);
+         const result =  await cursor.toArray()
     res.send(result)
 })
 
