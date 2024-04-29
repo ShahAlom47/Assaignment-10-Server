@@ -5,14 +5,14 @@ const app = express()
 const port = process.env.SERVER_PORT || 3000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-// Assaignment-10-Server
-// QtkkMO7StPyyp8uq
+
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true 
+  
 }));
 
 
@@ -38,6 +38,8 @@ async function run() {
         const userCollections = client.db("a10UserDB").collection('newUser');
         const spotCollections = client.db("spotsDB").collection('newSpot');
         const countryCollections = client.db("countryDB").collection('newCountry');
+        const guideCollections = client.db("guideDB").collection('newGuide');
+        const clientCollections = client.db("clientDB").collection('newClient');
 
         //  add user 
         app.post('/user', async (req, res) => {
@@ -96,9 +98,11 @@ app.get('/spotLow', async(req, res) => {
         sort: { average_cost: -1 },
     };
     const cursor = spotCollections.find({},options);
+ 
     
     const result =  await cursor.toArray();
     res.send(result);
+
 });
 
 
@@ -108,7 +112,8 @@ app.get('/spotUp', async(req, res) => {
     const options = {
         sort: { average_cost: 1 },
     };
-    const cursor = spotCollections.find({},options);
+    // const cursor = spotCollections.find({},options);
+    const cursor = spotCollections.find().sort({average_cost: 1})
     const result =  await cursor.toArray();
     res.send(result);
 });
@@ -204,50 +209,37 @@ app.get('/country/:country', async(req, res) => {
     res.send(result)
 })
 
+// ================guide Api========
+app.post('/guide', async (req, res) => {
+    const newGuide = req.body;
+    const result = await guideCollections.insertOne(newGuide);
+    res.send(result)
+});
 
+// get multiple data 
 
-        // // get single data 
-        // app.get('/user/:id', async(req, res) => {
-        //     const id= req.params.id
-        //      const query = { _id: new ObjectId(id) };
-        //      const result = await userCollections.findOne(query);
-        //     res.send(result)
-        // })
-
-
-
-        // // update data 
-        // app.patch('/user/:id', async(req, res) => {
-        //     const data = req.body
-        //     const id= req.params.id
-        //     const filter  = { _id: new ObjectId(id) };
-        //     const updateDoc = {
-        //         $set: {
-        //           name:data.name,
-        //           email:data.email,
-        //         },
-        //       };
-        //       const result = await userCollections.updateOne(filter, updateDoc);
-        //      res.send(result)
-        //  })
+app.get('/guide', async(req, res) => {
+    const cursor = guideCollections.find();
+    const result =  await cursor.toArray()
+    res.send(result)
+})
 
 
 
-        // // delete data
-        // app.delete('/user/:id', async(req, res) => {
-        //    const id= req.params.id
-        //     const query = { _id: new ObjectId(id) };
-        //     const result = await userCollections.deleteOne(query);
-        //     res.send(result)
-        // })
+// ============Client API===========
+app.post('/client', async (req, res) => {
+    const newClient = req.body;
+    const result = await clientCollections.insertOne(newClient);
+    res.send(result)
+});
+app.get('/client', async(req, res) => {
+    const cursor = clientCollections.find();
+    const result =  await cursor.toArray()
+    res.send(result)
+})
 
 
-
-
-
-
-
-
+        
 
         console.log("Pinged your deployment. You successfully connected to MongoDB! m");
     } finally {
@@ -260,7 +252,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!sss f')
+    res.send('Hello World!')
 })
 
 app.listen(port, () => {
